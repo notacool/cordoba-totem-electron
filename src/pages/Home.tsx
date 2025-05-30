@@ -1,0 +1,275 @@
+import bgHome from "../assets/bg-home.svg";
+import topBar from "../assets/top_bar.svg";
+import foto1 from "../assets/foto1.png";
+import swipe from "../assets/swipe.svg";
+import cordoba from "../assets/cordoba-es-mas.svg";
+import right from "../assets/right.svg";
+import left from "../assets/left.svg";
+import right2 from "../assets/right2.svg";
+import home from "../assets/home.svg";
+import { useNavigate } from "react-router-dom";
+import { Attachment, Totem } from "../types/entities";
+import { useEffect, useRef, useState } from "react";
+import camera from "../assets/camera.svg";
+import video from "../assets/video.svg";
+export function Home({
+  totem,
+  attachments,
+}: {
+  totem: Totem;
+  attachments: Attachment[];
+}) {
+  const [attachmentToShow, setAattachmentToShow] = useState(attachments[0]);
+  const [page, setPage] = useState(0);
+  const [pages, setPages] = useState<number>();
+
+  const [web, setWeb] = useState(false);
+
+  const prev = () => {
+    if (page === 0 && pages) {
+      setPage(pages - 1);
+    } else {
+      setPage(page - 1);
+    }
+  };
+
+  const next = () => {
+    if (pages && page === pages - 1) {
+      setPage(0);
+    } else {
+      setPage(page + 1);
+    }
+  };
+
+  useEffect(() => {
+    setPages(
+      Math.ceil(
+        attachments.filter(
+          (attachment) => attachment.id !== attachmentToShow.id
+        ).length / 3
+      )
+    );
+  }, [attachments]);
+
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const resetTimer = () => {
+    // 🛠️ Si existe un timeout anterior, lo limpiamos
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    // ⏳ Configuramos un nuevo timeout
+    timeoutRef.current = setTimeout(() => {
+      navigate("/");
+    }, 120000);
+  };
+
+  useEffect(() => {
+    const events = ["mousemove", "keydown", "touchstart", "visibilitychange"];
+
+    events.forEach((event) => window.addEventListener(event, resetTimer));
+    resetTimer(); // Iniciar temporizador al cargar
+
+    return () => {
+      events.forEach((event) => window.removeEventListener(event, resetTimer));
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  const navigate = useNavigate();
+  return (
+    <div className="bg" style={{ backgroundImage: `url(${bgHome})` }}>
+      {web ? (
+        <div className="homeTextContainer">
+          <span className="cordobaText">Turismo de Córdoba</span>
+          <span className="imagesText">NAVEGACIÓN WEB</span>
+        </div>
+      ) : (
+        <div className="homeTextContainer">
+          <span className="cordobaText">Córdoba</span>
+          <span className="imagesText">EN IMÁGENES</span>
+        </div>
+      )}
+
+      <div className="contentContainer">
+        <div
+          style={{
+            backgroundImage: `url(${topBar})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "contain",
+            backgroundPosition: "center",
+            width: "93.25%",
+            height: "12%",
+            display: "flex",
+            justifyContent: "center",
+            gap: "1%",
+            alignItems: "center",
+            position: "relative",
+          }}
+        >
+          {web && (
+            <div style={{ position: "absolute", left: "3%", display: "flex", gap: "10%", alignItems: "center" }}>
+              <img src={left} width="100%" onClick={() => setWeb(false)} />
+              <span className="homeText" onClick={() => setWeb(false)}>
+                Atras
+              </span>
+            </div>
+          )}
+          <img src={home} width="5%" onClick={() => navigate("/")} />
+          <span className="homeText" onClick={() => navigate("/")}>
+            Inicio
+          </span>
+        </div>
+        {/* <img src={topBar} width="93.25%" /> */}
+        {!web ? (
+          <div className="content">
+            {attachmentToShow.index_content === "image" ? (
+              <img
+                src={"data:image/jpeg;base64," + attachmentToShow.datas}
+                width={"100%"}
+              />
+            ) : (
+              <video
+                style={{ width: "100%" }}
+                autoPlay
+                muted
+                loop
+                controls
+                controlsList="nofullscreen nodownload noremoteplayback"
+              >
+                <source
+                  src={`data:video/mp4;base64,${attachmentToShow.datas}`}
+                  type="video/mp4"
+                />
+                Tu navegador no soporta el elemento de video.
+              </video>
+            )}
+            <div style={{ width: "100%" }}>
+              <span className="imageFooter">
+                {attachmentToShow.name.split(".")[0]}
+              </span>
+            </div>
+            <div className="carousel">
+              <div style={{ width: "15%" }} onClick={prev}>
+                <img src={left} width={"100%"} />
+              </div>
+              {attachments
+                .filter((attachment) => attachment.id !== attachmentToShow.id)
+                .slice(page * 3, page * 3 + 3)
+                .map((attachment) => {
+                  return attachment.index_content === "image" ? (
+                    <div
+                      style={{
+                        position: "relative",
+                        width: "100%",
+                        height: "100%",
+                      }}
+                      onClick={() => setAattachmentToShow(attachment)}
+                    >
+                      <img
+                        src={"data:image/jpeg;base64," + attachment.datas}
+                        height={"100%"}
+                        width={"100%"}
+                        style={{ objectFit: "cover" }}
+                      />
+                      <div
+                        style={{
+                          width: "15%",
+                          position: "absolute",
+                          top: "70%",
+                          left: "6%",
+                        }}
+                      >
+                        <img src={camera} width={"100%"} />
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      style={{
+                        position: "relative",
+                        width: "100%",
+                        height: "100%",
+                      }}
+                      onClick={() => setAattachmentToShow(attachment)}
+                    >
+                      <video
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                        autoPlay
+                        muted
+                        loop
+                      >
+                        <source
+                          src={`data:video/mp4;base64,${attachment.datas}`}
+                          type="video/mp4"
+                        />
+                        Tu navegador no soporta el elemento de video.
+                      </video>
+                      <div
+                        style={{
+                          width: "15%",
+                          position: "absolute",
+                          top: "70%",
+                          left: "6%",
+                        }}
+                      >
+                        <img src={video} width={"100%"} />
+                      </div>
+                    </div>
+                  );
+                })}
+              <div style={{ width: "15%" }} onClick={next}>
+                <img src={right2} width={"100%"} />
+              </div>
+            </div>
+            <div className="pagination">
+              {pages
+                ? Array.from({ length: pages }, (_, i) => (
+                    <div className={page === i ? `page1` : `page2`}></div>
+                  ))
+                : undefined}
+            </div>
+            <div
+              className="access"
+              style={{
+                backgroundImage: `url(${cordoba})`,
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "contain",
+                backgroundPosition: "center",
+              }}
+            >
+              <span className="accessText">
+                Consulta la web de Turismo de Córdoba
+              </span>
+              <button className="accessButton" onClick={() => setWeb(true)}>
+                <span>Accede</span>
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <img src={right} width={"100%"} />
+                </div>
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="content">
+            <iframe
+              src={`http://localhost:3000/proxy?url=${encodeURIComponent(
+                totem?.url
+              )}`}
+              style={{ width: "100%", height: "100%", border: "none" }}
+              title="WebView"
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,45 @@
+{
+  "name": "cordoba-totem-electron",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Totem informativo para Cordoba",
+  "main": "electron/main.js",
+  "scripts": {
+    "vite": "vite",
+    "start": "concurrently \"vite\" \"node server/backend.js\"",
+    "build": "vite build",
+    "electron": "electron electron/main.js",
+    "mini-electron": "electron electron/main.js --width=423 --height=751",
+    "electron-build": "electron-builder"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notacool/cordoba-totem-electron.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/notacool/cordoba-totem-electron/issues"
+  },
+  "homepage": "https://github.com/notacool/cordoba-totem-electron#readme",
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.5.0",
+    "express": "^5.1.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.27.0",
+    "@tailwindcss/postcss": "^4.1.7",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.5",
+    "concurrently": "^9.1.2",
+    "electron": "^36.3.1",
+    "electron-builder": "^26.0.12",
+    "eslint": "^9.27.0",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.32.1",
+    "vite": "^6.3.5"
+  }
+}
