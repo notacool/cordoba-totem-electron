@@ -1,6 +1,7 @@
 import bgHome from "../assets/bg-home.svg";
 import topBar from "../assets/top_bar.svg";
 import foto1 from "../assets/foto1.png";
+import qrImage from "../assets/QR.png";
 import swipe from "../assets/swipe.svg";
 import cordoba from "../assets/cordoba-es-mas.svg";
 import right from "../assets/right.svg";
@@ -107,7 +108,15 @@ export function Home({
           }}
         >
           {web && (
-            <div style={{ position: "absolute", left: "3%", display: "flex", gap: "10%", alignItems: "center" }}>
+            <div
+              style={{
+                position: "absolute",
+                left: "3%",
+                display: "flex",
+                gap: "10%",
+                alignItems: "center",
+              }}
+            >
               <img src={left} width="100%" onClick={() => setWeb(false)} />
               <span className="homeText" onClick={() => setWeb(false)}>
                 Atras
@@ -122,32 +131,37 @@ export function Home({
         {/* <img src={topBar} width="93.25%" /> */}
         {!web ? (
           <div className="content">
-            {attachmentToShow.index_content === "image" ? (
-              <img
-                src={"data:image/jpeg;base64," + attachmentToShow.datas}
-                width={"100%"}
-              />
-            ) : (
-              <video
-                style={{ width: "100%" }}
-                autoPlay
-                muted
-                loop
-                controls
-                controlsList="nofullscreen nodownload noremoteplayback"
-              >
-                <source
-                  src={`data:video/mp4;base64,${attachmentToShow.datas}`}
-                  type="video/mp4"
+            {/* START HERO */}
+            <div className="heroContainer">
+              {attachmentToShow.index_content === "image" ? (
+                <img
+                  src={"data:image/jpeg;base64," + attachmentToShow.datas}
+                  className="heroImage"
                 />
-                Tu navegador no soporta el elemento de video.
-              </video>
-            )}
-            <div style={{ width: "100%" }}>
-              <span className="imageFooter">
-                {attachmentToShow.name.split(".")[0]}
-              </span>
+              ) : (
+                <video
+                  className="heroImage"
+                  autoPlay
+                  muted
+                  loop
+                  controls
+                  controlsList="nofullscreen nodownload noremoteplayback"
+                >
+                  <source
+                    src={`data:video/mp4;base64,${attachmentToShow.datas}`}
+                    type="video/mp4"
+                  />
+                  Tu navegador no soporta el elemento de video.
+                </video>
+              )}
+              <div className="heroLabelContainer">
+                <span className="heroLabel">
+                  {attachmentToShow.name.split(".")[0]}
+                </span>
+              </div>
             </div>
+            {/* END HERO */}
+            {/* START CAROUSEL */}
             <div className="carousel">
               <div style={{ width: "15%" }} onClick={prev}>
                 <img src={left} width={"100%"} />
@@ -231,7 +245,7 @@ export function Home({
                   ))
                 : undefined}
             </div>
-            <div
+            {/* <div
               className="access"
               style={{
                 backgroundImage: `url(${cordoba})`,
@@ -242,8 +256,8 @@ export function Home({
             >
               <span className="accessText">
                 Consulta la web de Turismo de Córdoba
-              </span>
-              <button className="accessButton" onClick={() => setWeb(true)}>
+              </span> */}
+            {/* <button className="accessButton" onClick={() => setWeb(true)}>
                 <span>Accede</span>
                 <div
                   style={{
@@ -255,7 +269,31 @@ export function Home({
                 >
                   <img src={right} width={"100%"} />
                 </div>
-              </button>
+              </button> */}
+            <div className="footerCardContainer">
+              <div
+                className="footerCard"
+                style={{ backgroundColor: "#FFF1F1" }}
+              >
+                <h1 className="footerCardTitle">Consulta la web de turismo</h1>
+                <button className="accessButton" onClick={() => setWeb(true)}>
+                  <span>Accede</span>
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <img src={right} width={"100%"} />
+                  </div>
+                </button>
+              </div>
+              <div className="footerCard">
+                <h1 className="footerCardTitle">Descarga la APP</h1>
+                <img src={qrImage} alt="" className="footerCardQR" />
+              </div>
             </div>
           </div>
         ) : (
