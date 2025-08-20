@@ -113,26 +113,6 @@ const Carousel = ({
           transition={{ duration: 1, ease: "easeInOut" }}
         />
       </AnimatePresence>
-      {/* Button overlay */}
-      <button
-        onClick={onClick}
-        className="startText"
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          padding: "64px",
-          fontSize: "4rem",
-          color: "black",
-          backgroundColor: "rgba(255, 255, 255, 0.6)",
-          border: "none",
-          borderRadius: "12px",
-          cursor: "pointer",
-        }}
-      >
-        Toca para empezar
-      </button>
     </div>
   );
 };
