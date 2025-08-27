@@ -16,7 +16,7 @@ export function Welcome() {
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
       setIsWaiting(true);
-    }, 2000); // 20 seconds
+    }, 20000); // 20 seconds
   };
 
   const fetchCarousel = async () => {
