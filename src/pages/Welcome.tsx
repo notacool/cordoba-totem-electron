@@ -16,7 +16,7 @@ export function Welcome() {
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
       setIsWaiting(true);
-    }, 20000); // 20 seconds
+    }, 2000); // 20 seconds
   };
 
   const fetchCarousel = async () => {
@@ -42,7 +42,7 @@ export function Welcome() {
     startTimer(); // restart waiting countdown
   };
 
-  const images = useMemo(() => {
+  const urls = useMemo(() => {
     if (!carousel || !carousel.attachment_ids) {
       return [];
     }
@@ -50,7 +50,7 @@ export function Welcome() {
   }, [carousel]);
 
   return isWaiting ? (
-    <Carousel enabled={isWaiting} images={images} onClick={handleClick} />
+    <Carousel enabled={isWaiting} urls={urls} onClick={handleClick} />
   ) : (
     <WelcomeComponent />
   );
@@ -82,26 +82,71 @@ const WelcomeComponent = () => {
   );
 };
 
+type Media = {
+  url: string;
+  type: "image" | "video" | "unknown";
+};
+
+const getMediaType = async (
+  url: string
+): Promise<"image" | "video" | "unknown"> => {
+  try {
+    const res = await fetch(url, { method: "HEAD" });
+    const contentType = res.headers.get("content-type");
+    if (contentType?.startsWith("image")) return "image";
+    if (contentType?.startsWith("video")) return "video";
+    return "unknown";
+  } catch {
+    return "unknown";
+  }
+};
+
 const Carousel = ({
-  images,
+  urls,
   enabled,
   onClick,
 }: {
-  images: string[];
+  urls: string[];
   enabled: boolean;
   onClick?: () => void;
 }) => {
+  const [slides, setSlides] = useState<Media[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+  };
 
   useEffect(() => {
-    if (!enabled) return;
+    // classify all URLs on mount
+    Promise.all(
+      urls.map(async (url) => ({
+        url,
+        type: await getMediaType(url),
+      }))
+    ).then(setSlides);
+  }, [urls]);
 
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-    }, 8000);
+  useEffect(() => {
+    if (!enabled || slides.length === 0) return;
 
-    return () => clearInterval(interval);
-  }, [enabled, images.length]);
+    const current = slides[currentIndex];
+
+    if (current?.type === "image") {
+      const timer = setTimeout(nextSlide, 8000);
+      return () => clearTimeout(timer);
+    }
+
+    if (current?.type === "video" && videoRef.current) {
+      const handleEnded = () => nextSlide();
+      const video = videoRef.current;
+      video.addEventListener("ended", handleEnded);
+      return () => video.removeEventListener("ended", handleEnded);
+    }
+  }, [enabled, slides, currentIndex]);
+
+  const current = slides[currentIndex];
 
   return (
     <div
@@ -115,21 +160,43 @@ const Carousel = ({
       onClick={onClick}
     >
       <AnimatePresence mode="sync">
-        <motion.img
-          key={currentIndex}
-          src={images[currentIndex]}
-          alt={`carousel-${currentIndex}`}
-          style={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1, ease: "easeInOut" }}
-        />
+        {current?.type === "image" && (
+          <motion.img
+            key={`img-${currentIndex}`}
+            src={current.url}
+            alt={`carousel-${currentIndex}`}
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+          />
+        )}
+        {current?.type === "video" && (
+          <motion.video
+            key={`vid-${currentIndex}`}
+            ref={videoRef}
+            src={current.url}
+            autoPlay
+            muted
+            playsInline
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+          />
+        )}
       </AnimatePresence>
     </div>
   );
