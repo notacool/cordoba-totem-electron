@@ -3,9 +3,13 @@ import bgSalvapantallas from "../assets/bg-salvapantallas.svg";
 import touch from "../assets/touch.svg";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { getCarousel } from "../lib/get-carousel";
+import { Carousel as CarouselType } from "../types/entities";
+import { getContentUrl } from "../utils/content";
 
 export function Welcome() {
   const [isWaiting, setIsWaiting] = useState(false);
+  const [carousel, setCarousel] = useState<CarouselType>();
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const startTimer = () => {
@@ -15,8 +19,19 @@ export function Welcome() {
     }, 20000); // 20 seconds
   };
 
+  const fetchCarousel = async () => {
+    try {
+      const c = await getCarousel();
+      console.warn(c);
+      setCarousel(c);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     startTimer();
+    fetchCarousel();
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
@@ -28,8 +43,11 @@ export function Welcome() {
   };
 
   const images = useMemo(() => {
-    return Array.from({ length: 29 }, (_, i) => `/carousel/${i}.webp`);
-  }, []);
+    if (!carousel || !carousel.attachment_ids) {
+      return [];
+    }
+    return carousel.attachment_ids.map((id) => getContentUrl(id));
+  }, [carousel]);
 
   return isWaiting ? (
     <Carousel enabled={isWaiting} images={images} onClick={handleClick} />
