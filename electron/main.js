@@ -13,7 +13,8 @@ app.whenReady().then(() => {
     height: windowHeight,
     frame: true,
     resizable: true,
-    fullscreenable: false,
+    fullscreenable: true,
+    fullscreen: true,
     // useContentSize: false, // ❗️Asegura que el tamaño incluya bordes
     webPreferences: {
       nodeIntegration: true
