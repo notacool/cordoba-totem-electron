@@ -15,16 +15,6 @@ Describe brevemente los cambios realizados en este PR.
 - [ ] Refactorización
 - [ ] Otro (especificar)
 
-## ¿Cómo se ha probado?
-
-Explica cómo se ha probado este cambio y qué pruebas se han realizado.
-
-## Checklist
-
-- [ ] El código sigue el estilo del proyecto
-- [ ] Se han realizado pruebas relevantes
-- [ ] La documentación se ha actualizado si es necesario
-
 ## Información adicional
 
 Agrega cualquier información relevante para los revisores.
