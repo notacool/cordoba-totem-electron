@@ -1,17 +1,10 @@
-import js from '@eslint/js';
-
 export default [
-  js.config({
-    env: {
-      browser: true,
-      es2021: true,
-      node: true
-    },
-    extends: [],
-    parserOptions: {
+  {
+    files: ['src/**/*.{js,jsx,ts,tsx}'],
+    languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module'
     },
     rules: {}
-  })
+  }
 ];
