@@ -11,4 +11,4 @@ echo $! > killpid
 echo "Backend/frontend iniciado. PID guardado en killpid. Log en start.log."
 
 echo "Lanzando Electron en primer plano (sin sandbox)..."
-npm run electron
+ELECTRON_DISABLE_SANDBOX=true npm run electron
