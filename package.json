@@ -5,12 +5,13 @@
   "description": "Totem informativo para Cordoba",
   "main": "electron/main.js",
   "scripts": {
-    "vite": "vite",
-    "start": "concurrently \"vite\" \"node server/backend.js\"",
-    "build": "vite build",
-    "electron": "electron electron/main.js",
-    "mini-electron": "electron electron/main.js --width=423 --height=751",
-    "electron-build": "electron-builder"
+  "vite": "vite",
+  "start": "concurrently \"vite\" \"node server/backend.js\"",
+  "build": "vite build",
+  "electron": "electron electron/main.js",
+  "mini-electron": "electron electron/main.js --width=423 --height=751",
+  "electron-build": "electron-builder",
+  "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\""
   },
   "repository": {
     "type": "git",
