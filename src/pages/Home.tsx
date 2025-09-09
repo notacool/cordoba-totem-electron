@@ -13,6 +13,7 @@ import { Attachment, Totem } from "../types/entities";
 import { useEffect, useRef, useState } from "react";
 import camera from "../assets/camera.svg";
 import video from "../assets/video.svg";
+import bgFooterCard from "../assets/bg-footer-card.svg";
 export function Home({
   totem,
   attachments,
@@ -79,55 +80,18 @@ export function Home({
   const navigate = useNavigate();
   return (
     <div className="bg" style={{ backgroundImage: `url(${bgHome})` }}>
-      {web ? (
-        <div className="homeTextContainer">
-          <span className="cordobaText">Turismo de Córdoba</span>
-          <span className="imagesText">NAVEGACIÓN WEB</span>
+      <div className="homeTextContainer">
+        <div className="headerContainer">
+          <button className="headerButton" onClick={() => navigate("/")}>
+            <img src={home} width="40px" />
+            <span className="headerButtonText">Inicio</span>
+          </button>
+
+          <h1 className="headerTitle">Bienvenido a Córdoba</h1>
         </div>
-      ) : (
-        <div className="homeTextContainer">
-          <span className="cordobaText">Córdoba</span>
-          <span className="imagesText">EN IMÁGENES</span>
-        </div>
-      )}
+      </div>
 
       <div className="contentContainer">
-        <div
-          style={{
-            backgroundImage: `url(${topBar})`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "contain",
-            backgroundPosition: "center",
-            width: "93.25%",
-            height: "12%",
-            display: "flex",
-            justifyContent: "center",
-            gap: "1%",
-            alignItems: "center",
-            position: "relative",
-          }}
-        >
-          {web && (
-            <div
-              style={{
-                position: "absolute",
-                left: "3%",
-                display: "flex",
-                gap: "10%",
-                alignItems: "center",
-              }}
-            >
-              <img src={left} width="100%" onClick={() => setWeb(false)} />
-              <span className="homeText" onClick={() => setWeb(false)}>
-                Atras
-              </span>
-            </div>
-          )}
-          <img src={home} width="5%" onClick={() => navigate("/")} />
-          <span className="homeText" onClick={() => navigate("/")}>
-            Inicio
-          </span>
-        </div>
         {/* <img src={topBar} width="93.25%" /> */}
         {!web ? (
           <div className="content">
@@ -163,7 +127,7 @@ export function Home({
             {/* END HERO */}
             {/* START CAROUSEL */}
             <div className="carousel">
-              <div style={{ width: "15%" }} onClick={prev}>
+              <div onClick={prev}>
                 <img src={left} width={"100%"} />
               </div>
               {attachments
@@ -234,7 +198,7 @@ export function Home({
                     </div>
                   );
                 })}
-              <div style={{ width: "15%" }} onClick={next}>
+              <div onClick={next}>
                 <img src={right2} width={"100%"} />
               </div>
             </div>
@@ -273,24 +237,19 @@ export function Home({
             <div className="footerCardContainer">
               <div
                 className="footerCard"
-                style={{ backgroundColor: "#FFF1F1" }}
+                style={{
+                  backgroundImage: `url(${bgFooterCard})`,
+                  backgroundSize: "contain",
+                  backgroundRepeat: "no-repeat",
+                }}
               >
                 <h1 className="footerCardTitle">Consulta la web de turismo</h1>
                 <button className="accessButton" onClick={() => setWeb(true)}>
                   <span>Accede</span>
-                  <div
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <img src={right} width={"100%"} />
-                  </div>
+                  <img src={right} width={"100%"} />
                 </button>
               </div>
-              <div className="footerCard">
+              <div className="footerCard footerCardBorder">
                 <h1 className="footerCardTitle">Descarga la APP</h1>
                 <img src={qrImage} alt="" className="footerCardQR" />
               </div>
