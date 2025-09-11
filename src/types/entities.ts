@@ -10,10 +10,6 @@ export interface Totem {
 export interface Attachment {
   id: string;
   name: string;
-  mimetype: string;
-  datas: string;
-  local_url: string;
-  index_content: string;
 }
 
 export type Carousel = {
@@ -21,3 +17,10 @@ export type Carousel = {
   active: Boolean;
   attachment_ids: number[];
 };
+
+export type Content = {
+  url: string;
+  type: "image" | "video" | "unknown";
+};
+
+export type ContentWithId = Content & { id: number };

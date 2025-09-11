@@ -4,7 +4,7 @@ import touch from "../assets/touch.svg";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { getCarousel } from "../lib/get-carousel";
-import { Carousel as CarouselType } from "../types/entities";
+import { Carousel as CarouselType, Content } from "../types/entities";
 import { getContentUrl } from "../utils/content";
 
 export function Welcome() {
@@ -22,7 +22,6 @@ export function Welcome() {
   const fetchCarousel = async () => {
     try {
       const c = await getCarousel();
-      console.warn(c);
       setCarousel(c);
     } catch (err) {
       console.error(err);
@@ -82,12 +81,8 @@ const WelcomeComponent = () => {
   );
 };
 
-type Media = {
-  url: string;
-  type: "image" | "video" | "unknown";
-};
 
-const getMediaType = async (
+const getContentType = async (
   url: string
 ): Promise<"image" | "video" | "unknown"> => {
   try {
@@ -110,7 +105,7 @@ const Carousel = ({
   enabled: boolean;
   onClick?: () => void;
 }) => {
-  const [slides, setSlides] = useState<Media[]>([]);
+  const [slides, setSlides] = useState<Content[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -123,7 +118,7 @@ const Carousel = ({
     Promise.all(
       urls.map(async (url) => ({
         url,
-        type: await getMediaType(url),
+        type: await getContentType(url),
       }))
     ).then(setSlides);
   }, [urls]);
